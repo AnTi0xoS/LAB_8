@@ -34,7 +34,6 @@ class Fraction {
 //    }
 
     String getValue() {
-        String value;
         if (this.num == this.denom) {
             return "1";
         } else if (this.denom == 1) {
