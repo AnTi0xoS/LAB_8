@@ -1,6 +1,5 @@
 package com.calc;
 
-import java.util.Objects;
 import java.util.Scanner;
 import java.util.regex.*;
 
@@ -9,10 +8,11 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("*** КАЛЬКУЛЯТОР ДРОБЕЙ ***");
         System.out.println();
+        System.out.println("Данная программа реализует сложение, вычитание, умножение, или деление двух дробей");
         System.out.println("Пожалуйста, следуйте инструкции для корректной работы программы:");
         System.out.println("    - используйте цифры для ввода значений числителя и знаменателя дроби");
-        System.out.println("    - используйте '/' для обозначения черты деления дроби");
-        System.out.println("    - используйте '+', '-', '*' и '/' для обозначения арифметических операций");
+        System.out.println("    - используйте '/' для обозначения черты деления дробей");
+        System.out.println("    - используйте '+', '-', '*' или '/' для обозначения арифметической операции");
         System.out.println("    - ставьте пробелы между дробями и знаком арифметической операции");
         System.out.println("    - для ввода отрицательного значения поставте '-' перед числителем или знаменателем дроби без пробела и скобок");
         System.out.println("    Пример ввода: 1/2 + -3/4");
@@ -20,14 +20,16 @@ public class Main {
         System.out.print("Введите выражение: ");
         Scanner in = new Scanner(System.in);
         String userInput = in.nextLine();
-        Pattern correctEnterPattern = Pattern.compile("((\\d+)|[\\-](\\d+))/((\\d+)|[\\-](\\d+))\\s[\\+\\-\\*\\/]\\s((\\d+)|[\\-](\\d+))/((\\d+)|[\\-](\\d+))");
-        Matcher correctEnterMatcher = correctEnterPattern.matcher(userInput);
-        if (!(correctEnterMatcher.matches())) {
+
+        Pattern correctInputPattern = Pattern.compile("([\\-]?\\d+)/([\\-]?\\d+)\\s[\\+\\-\\*\\/]\\s([\\-]?\\d+)/([\\-]?\\d+)");
+        Matcher correctInputMatcher = correctInputPattern.matcher(userInput);
+        if (!(correctInputMatcher.matches())) {
             System.out.println("ОШИБКА: Неверный ввод");
             System.out.println("        Пожалуйста, повторите попытку");
             System.exit(1);
         } else {
             String[] expression = userInput.split("\\s");
+
             String[] firstFraction = expression[0].split("/");
             int firstNum = Integer.parseInt(firstFraction[0]);
             int firstDenom = Integer.parseInt(firstFraction[1]);
