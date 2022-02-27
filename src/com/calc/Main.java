@@ -67,5 +67,6 @@ public class Main {
             System.out.print("способ подсчета 2: ");
             System.out.println(first.getValue());
         }
+        in.close();
     }
 }
