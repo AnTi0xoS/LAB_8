@@ -1,66 +1,67 @@
 package com.calc;
 
-class Fraction {
+public class Fraction {
 
-    private int num, denom;
+    private int numenator, denominator;
 
     Fraction() {
-        this.num = 1;
-        this.denom = 1;
+        this.numenator = 1;
+        this.denominator = 1;
     }
 
     Fraction(int num, int denom) {
         if (denom == 0) {
-            System.out.println("ОШИБКА: Деление на ноль");
-            System.out.println("        Пожалуйста, повторите попытку");
-            System.exit(1);
+            throw new ArithmeticException();
         } else {
-            this.num = num;
-            this.denom = denom;
+            this.numenator = num;
+            this.denominator = denom;
             this.reductionValue();
         }
     }
 
-//    void setValue(int num, int denom) {
-//        if (denom == 0) {
-//            System.out.println("ОШИБКА: Деление на ноль");
-//            System.out.println("        Пожалуйста, повторите попытку");
-//            System.exit(1);
-//        } else {
-//            this.num = num;
-//            this.denom = denom;
-//            this.reductionValue();
-//        }
-//    }
-
-    String getValue() {
-        if (this.num == this.denom) {
-            return "1";
-        } else if (this.denom == 1) {
-            return this.num + "";
-        } else if (this.num == 0) {
-            return "0";
-        } else if (this.denom < 0) {
-            return(this.num * -1) + "/" + (this.denom * -1);
+    public String getValue() {
+        String value = "";
+        if (this.numenator == this.denominator) {
+            value += "1";
+        } else if (this.denominator == 1) {
+            value += this.numenator;
+        } else if (this.numenator == 0) {
+            value += "0";
+        } else if (this.denominator < 0) {
+            value += ((this.numenator * -1) + "/" + (this.denominator * -1));
         } else {
-            return this.num + "/" + this.denom;
+            value += (this.numenator + "/" + this.denominator);
         }
+        return value;
     }
 
     private void reductionValue() {
-        if (this.num == this.denom) {
-            this.num = 1;
-            this.denom = 1;
-        } else if (this.num == 0) {
-            this.denom = 1;
+        if (this.numenator == this.denominator) {
+            this.numenator = 1;
+            this.denominator = 1;
+        } else if (this.numenator == 0) {
+            this.denominator = 1;
         } else {
-            int gcd = greatestCommonDivisor(this.num, this.denom);
-            this.num /= gcd;
-            this.denom /= gcd;
+            int gcd = greatestCommonDivisor(this.numenator, this.denominator);
+            this.numenator /= gcd;
+            this.denominator /= gcd;
         }
     }
 
-    private int greatestCommonDivisor(int first, int second) {
+    private static void reductionValue(Fraction fraction) {
+        if (fraction.numenator == fraction.denominator) {
+            fraction.numenator = 1;
+            fraction.denominator = 1;
+        } else if (fraction.numenator == 0) {
+            fraction.denominator = 1;
+        } else {
+            int gcd = greatestCommonDivisor(fraction.numenator, fraction.denominator);
+            fraction.numenator /= gcd;
+            fraction.denominator /= gcd;
+        }
+    }
+
+    private static int greatestCommonDivisor(int first, int second) {
         int gcd = 1;
         int minValue = Math.min(Math.abs(first), Math.abs(second));
         for (int i = minValue; i >= 2; i--) {
@@ -72,63 +73,67 @@ class Fraction {
         return gcd;
     }
 
-    void summation(Fraction summand) {
-        this.num = this.num * summand.denom + summand.num * this.denom;
-        this.denom *= summand.denom;
+    public void summation(Fraction summand) {
+        this.numenator = this.numenator * summand.denominator + summand.numenator * this.denominator;
+        this.denominator *= summand.denominator;
         reductionValue();
     }
 
-    void summation(Fraction first, Fraction second) {
-        this.num = first.num * second.denom + second.num * first.denom;
-        this.denom = first.denom * second.denom;
+    public static Fraction summation(Fraction first, Fraction second) {
+        Fraction sum = new Fraction();
+        sum.numenator = first.numenator * second.denominator + second.numenator * first.denominator;
+        sum.denominator = first.denominator * second.denominator;
+        reductionValue(sum);
+        return sum;
+    }
+
+    public void substraction(Fraction deductible) {
+        this.numenator = this.numenator * deductible.denominator - deductible.numenator * this.denominator;
+        this.denominator *= deductible.denominator;
         reductionValue();
     }
 
-    void substraction(Fraction deductible) {
-        this.num = this.num * deductible.denom - deductible.num * this.denom;
-        this.denom *= deductible.denom;
+    public static Fraction substraction(Fraction first, Fraction second) {
+        Fraction reduced = new Fraction();
+        reduced.numenator = first.numenator * second.denominator - second.numenator * first.denominator;
+        reduced.denominator = first.denominator * second.denominator;
+        reductionValue(reduced);
+        return reduced;
+    }
+
+    public void multiplication(Fraction multiplier) {
+        this.numenator *= multiplier.numenator;
+        this.denominator *= multiplier.denominator;
         reductionValue();
     }
 
-    void substraction(Fraction first, Fraction second) {
-        this.num = first.num * second.denom - second.num * first.denom;
-        this.denom = first.denom * second.denom;
-        reductionValue();
+    public static Fraction multiplication(Fraction first, Fraction second) {
+        Fraction product = new Fraction();
+        product.numenator = first.numenator * second.numenator;
+        product.denominator = first.denominator * second.denominator;
+        reductionValue(product);
+        return product;
     }
 
-    void multiplication(Fraction multiplier) {
-        this.num *= multiplier.num;
-        this.denom *= multiplier.denom;
-        reductionValue();
-    }
-
-    void multiplication(Fraction first, Fraction second) {
-        this.num = first.num * second.num;
-        this.denom = first.denom * second.denom;
-        reductionValue();
-    }
-
-    void division(Fraction divisible) {
-        if (divisible.num == 0) {
-            System.out.println("ОШИБКА: Деление на ноль");
-            System.out.println("        Пожалуйста, повторите попытку");
-            System.exit(1);
+    public void division(Fraction divisible) {
+        if (divisible.numenator == 0) {
+            throw new ArithmeticException();
         } else {
-            this.num *= divisible.denom;
-            this.denom *= divisible.num;
+            this.numenator *= divisible.denominator;
+            this.denominator *= divisible.numenator;
             reductionValue();
         }
     }
 
-    void division(Fraction first, Fraction second) {
-        if (second.num == 0) {
-            System.out.println("ОШИБКА: Деление на ноль");
-            System.out.println("        Пожалуйста, повторите попытку");
-            System.exit(1);
+    public static Fraction division(Fraction first, Fraction second) {
+        Fraction divisible = new Fraction();
+        if (second.numenator == 0) {
+            throw new ArithmeticException();
         } else {
-            this.num = first.num * second.denom;
-            this.denom = first.denom * second.num;
-            reductionValue();
+            divisible.numenator = first.numenator * second.denominator;
+            divisible.denominator = first.denominator * second.numenator;
+            reductionValue(divisible);
         }
+        return divisible;
     }
 }
