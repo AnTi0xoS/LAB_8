@@ -1,4 +1,4 @@
-package com.calc;
+package calculator.main;
 
 public class Fraction {
 

@@ -1,4 +1,4 @@
-package com.calc;
+package calculator.main;
 
 import java.util.Objects;
 import java.util.Scanner;
@@ -23,7 +23,8 @@ interface Calculation {
                     - вы можете использовать скобки '(' и ')' для указания порядка действий
                     - количество дробей, скобок и арифметических операций неограничено
                     - вы можете ставить пробелы в выражении где угодно и в любом количестве
-                    Пример ввода: ((-1/3 * 3 / 4 - 1/2)*2 / 1)  :(- 1/-5 + ( 7/5 -6/7 ) )
+                    - для завершения работы введите 'quit'
+                    Пример ввода: ((-1/3 * 3/ 4 - 1/2)*2 / 1)  :(- 1/-5 + ( -6/7 ) )
                 """);
         System.out.print("\nВведите выражение: ");
     }
@@ -69,9 +70,8 @@ interface Calculation {
         while (userInput.contains(" ")) {
             userInput = userInput.replace(" ", "");
         }
-        Pattern correctInputPattern = Pattern.compile("((([\\-]?[\\(]*([\\-]?\\d+)/([\\-]?\\d+)[\\+\\-\\*\\:][\\(]*)+|" +
-                "([\\-]?[\\(]*([\\-]?\\d+)/([\\-]?\\d+)[\\)]*)+)" +
-                "(([\\+\\-\\*\\:]?([\\-]?\\d+)/([\\-]?\\d+))[\\)]*[\\+\\-\\*\\:]?)*)+");
+        Pattern correctInputPattern = Pattern.compile("((([-]?[(]*([-]?\\d+)/([-]?\\d+)[+*:-][(]*)+|" +
+                "([-]?[(]*([-]?d+)/([-]?\\d+)[)]*)+)(([+*:-]?([-]?\\d+)/([-]?\\d+))[)]*[+*:-]?)*)+");
         Matcher correctInputMatcher = correctInputPattern.matcher(userInput);
         if (!(correctInputMatcher.matches())) return null;
         int bracketCount = 0;
@@ -140,21 +140,21 @@ interface Calculation {
     }
 
     private static Fraction countAnswer(StringBuilder expressionRPN){
-        String stringElement = "";
+        StringBuilder stringElement;
         Fraction fractionElement;
         Stack<Fraction> stack = new Stack<>();
         for (int i = 0; i < expressionRPN.length(); i++) {
             if (expressionRPN.charAt(i) == ' ') continue;
             if (getPriority(expressionRPN.charAt(i)) == 0 | (expressionRPN.charAt(i) == '-' &&
                     (i == 0 | expressionRPN.charAt(i - 1) == '/' | expressionRPN.charAt(i - 1) == '('))) {
-                stringElement = "";
+                stringElement = new StringBuilder();
                 while (expressionRPN.charAt(i) != ' ' && (getPriority(expressionRPN.charAt(i)) == 0 |
                         (expressionRPN.charAt(i) == '-' && (i == 0 | expressionRPN.charAt(i - 1) == '/' |
                                 expressionRPN.charAt(i - 1) == '(')))) {
-                    stringElement += expressionRPN.charAt(i++);
+                    stringElement.append(expressionRPN.charAt(i++));
                     if (i == expressionRPN.length()) break;
                 }
-                String[] parseElement = stringElement.split("/");
+                String[] parseElement = stringElement.toString().split("/");
                 int elementNumenator = Integer.parseInt(parseElement[0]);
                 int elementDenominator = Integer.parseInt(parseElement[1]);
                 fractionElement = new Fraction(elementNumenator, elementDenominator);
